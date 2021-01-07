@@ -1,0 +1,60 @@
+.title {
+  margin-top: 3em;
+}
+
+/******************************* LEFT PART *****************************/
+
+.left-part {
+  border-right: solid 1.5px grey;
+}
+
+.margin-top- {
+  margin-top: -1.2em !important;
+}
+
+.card-text {
+  text-align: justify;
+  margin-top: 2em;
+}
+
+/******************************* RIGHT PART *****************************/
+
+.section {
+  margin-top: 6em;
+}
+
+.item-blog {
+  margin-bottom: 3em;
+  border-radius: 5px;
+  border: 1.5px solid grey;
+  background-color: white;
+  color: #1A1819;
+  cursor: pointer;
+}
+
+.item-blog:hover{
+  transition: background .7s, color .7s;
+  background-color: darkgrey;
+  color: white;
+}
+
+.card-image {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+}
+
+.card-image .image {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 101%;
+  height: auto;
+  margin-left: -1.5px;
+  margin-top: -1.5px;
+}
+
+.card-content {
+  height: auto;
+  padding: 0 2em 0 2em;
+  text-align: justify;
+}

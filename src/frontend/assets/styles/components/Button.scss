@@ -1,0 +1,15 @@
+.card-text-button {
+  width: 100%;
+  background-color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  border: solid 2px #1A1819;
+  cursor: pointer;
+  outline: none;
+}
+
+.card-text-button:hover {
+  transition: background .5s, color .5s;
+  background-color: #1A1819;
+  color: white;
+}

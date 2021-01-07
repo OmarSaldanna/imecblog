@@ -1,0 +1,43 @@
+.media-blog {
+  width: 100%;
+  height: auto;
+}
+
+.media-blog-item {
+  display: flex;
+  transition: margin .6s;
+  text-decoration: none;
+  width: 70%;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  color: #1A1819;
+}
+
+.media-blog-item:hover {
+  transition: margin .6s;
+  margin-left: 1.5em;
+  border-bottom: solid 1px grey;
+}
+
+.media-blog-item a {
+  text-decoration: none;
+  margin-left: 5px;
+  align-items: center;
+  color: #1A1819;
+}
+
+.media-blog-icon {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 992px) {
+  .offset-m-edited {
+    margin-left: 5.5% !important;
+  }
+  // correction for the navbar
+  .nav-logo {
+    margin-left: 1em;
+  }
+}
