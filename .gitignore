@@ -74,3 +74,6 @@ yarn-error.log
 
 # Build
 dist/
+
+# quitamos la carpeta de public de server
+src/server/public

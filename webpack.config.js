@@ -1,17 +1,37 @@
-// configuracion de webpack
-
 const path = require('path');
+const webpack = require('webpack');
 // requerimos el plugin de webpack
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const webpack = require('webpack');
+// usamos el plugin de compresion
+const compressionWebpackPlugin = require('compression-webpack-plugin');
+// un plugin para optimizacion
+const TerserPlugin = require('terser-webpack-plugin');
+// pligin para el manifest.json
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+// plugin para limpiar la carpeta de public
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+require('dotenv').config;
+
+// verificamos si estamos en desarrollo
+const isDev = (process.env.NODE_ENV === 'development');
+// creamos esta constante para la configuracion
+const entry = ['./src/frontend/index.js'];
+
+// si estamos en desarrollo agregamos el entry para desarrollo
+if (isDev) {
+  entry.push('webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true');
+}
 
 module.exports = {
-  entry: ['./src/frontend/index.js', 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true'],
-  mode: 'development',
+  entry: entry,
+  mode: process.env.ENV, // usamos las vars de entorno para automatizar el modo
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'assets/app.js',
+    // que el build quede en la carpeta de pblic en server
+    path: path.resolve(__dirname, 'src/server/public'),
+    // haseamos los archivos en prodiccion
+    filename: isDev ? 'assets/app.js' : 'assets/app-[hash].js',
     publicPath: '/',
   },
   resolve: {
@@ -19,6 +39,12 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   enforce: 'pre',
+      //   test: /\.(js|jsx)$/,
+      //   exclude: /node_modules/,
+      //   loader: 'eslint-loader',
+      // },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -26,14 +52,14 @@ module.exports = {
           loader: 'babel-loader',
         },
       },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-          },
-        ],
-      },
+      // { // un loader que no se usa y puede agregar peso
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: 'html-loader',
+      //     },
+      //   ],
+      // },
       {
         test: /\.(s*)css$/,
         use: [
@@ -62,13 +88,49 @@ module.exports = {
   },
   plugins: [
     // ayuda con el refresh de la app
-    new webpack.HotModuleReplacementPlugin(),
+    // lo validamos para que solo se use en desarrollo
+    isDev ? new webpack.HotModuleReplacementPlugin() : () => {},
+    // activamos el plugin de limpieza
+    isDev ? () => {} : new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: path.resolve(__dirname, 'src/server/public')
+    }),
+    // activamos el plugin de compresion
+    isDev ? () => {} : new compressionWebpackPlugin({
+      // extensiones de archivos a comprimir
+      test: /\.js$|\.css$/,
+      filename: '[path][base].gz',
+    }),
     // new HtmlWebpackPlugin({
     //   template: './public/index.html',
     //   filename: './index.html',
     // }),
     new MiniCssExtractPlugin({
-      filename: 'assets/app.css',
+      // tambien el css es hasheado
+      filename: isDev ? 'assets/app.css' : 'assets/app-[hash].css',
     }),
+    isDev ? () => {} : new WebpackManifestPlugin(),
   ],
+  // usamos el plugin de optimization
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+    splitChunks: {
+      chunks: 'async',
+      cacheGroups: {
+        // ajuste del vendor que es como el optim de paquetes
+        vendors: {
+          name: 'vendors',
+          chunks: 'all',
+          reuseExistingChunk: true,
+          priority: 1,
+          filename: isDev ? 'assets/vendor.js' : 'assets/vendor-[hash].js',
+          enforce: true,
+          test(module, chunks) {
+            const name = module.nameForCondition && module.nameForCondition();
+            return (chunk) => chunk.name !== 'vendors' && /[\\/]node_modules[\\/]/.test(name);
+          },
+        },
+      },
+    },
+  },
 };

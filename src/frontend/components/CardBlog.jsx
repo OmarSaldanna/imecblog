@@ -1,12 +1,11 @@
 import React from 'react';
-import imagen from '../assets/static/imagen.jpg';
 
 const CardBlog = props => {
   return (
     <div className="item-blog col l5 offset-l1  m5 offset-m-edited s10 offset-s1">
       <div className="row">
        <div className="col s12 card-image">
-        <img className="image" src={imagen} alt="imagen"/>
+        <img className="image" src="https://res.cloudinary.com/imec-blog/image/upload/v1610171090/drone_fomt3p.jpg" alt="imagen"/>
        </div>
       </div>
       <div className="card-content">
